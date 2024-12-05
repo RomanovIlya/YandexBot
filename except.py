@@ -1,0 +1,2 @@
+class NotAdmin(Exception):
+    {}
