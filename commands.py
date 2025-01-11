@@ -94,3 +94,34 @@ async def command_unmute(message: Message, command: CommandObject, bot: Bot):
     except NotAdmin:
         await message.reply("У вас нет прав, соболезную 🤣")
 
+@dp.message(Command("set_admin"))
+async def set_all_admin(message: Message):
+    members = await bot.get_chat_administrators(message.chat.id)
+    for admin in members:
+        db.add_admin(admin.user.username)
+    await message.delete()
+
+@dp.message(Command("get_admin"))
+async def get_all_admin(message: Message):
+    admin_list = "Список администраторов:"
+    if db.check_admin(message.from_user.username):
+        for i in db.get_admin():
+            admin_list = admin_list + "\n" + "@" + str(i)[2:-3]
+    await message.reply(admin_list)
+
+@dp.message(Command("get_mute"))
+async def get_all_admin(message: Message):
+    mute_list = "Список пользователей, которые получили мут:"
+    if db.check_admin(message.from_user.username):
+        for i in db.get_mute():
+            mute_list = mute_list + "\n" + "@" + str(i)[2:-3]
+    await message.reply(mute_list)
+
+@dp.message(Command("get_ban"))
+async def get_all_admin(message: Message):
+    ban_list = "Список пользователей, которые получили бан:"
+    if db.check_admin(message.from_user.username):
+        for i in db.get_ban():
+            ban_list = ban_list + "\n" + "@" + str(i)[2:-3]
+    await message.reply(ban_list)
+        

@@ -20,6 +20,12 @@ class Database:
         )
         ''')
 
+        self.cur.execute('''
+        CREATE TABLE IF NOT EXISTS Admin (
+        name TEXT PRIMARY KEY
+        )
+        ''')
+
         self.connection.commit()
     
     def write_to(self, name, id, reason):
@@ -37,6 +43,27 @@ class Database:
     def delete_from(self, name):
         self.cur.execute('DELETE FROM Users WHERE name=?', (name))
         self.connection.commit()
+
+    def add_admin(self, name):
+        try:
+            self.cur.execute('INSERT INTO Admin (name) VALUES (?)', (name,))
+            self.connection.commit()
+        except:
+            pass
+    
+    def check_admin(self, name):
+        if self.cur.execute('SELECT * FROM Admin WHERE name = ?', (name,)).fetchall():
+            return True
+        return False
+    
+    def get_admin(self):
+        return self.cur.execute('SELECT * FROM Admin').fetchall()
+    
+    def get_mute(self):
+        return self.cur.execute('SELECT * FROM Users WHERE reason="mute"').fetchall()
+    
+    def get_ban(self):
+        return self.cur.execute('SELECT * FROM Users WHERE reason="ban"').fetchall()
 
 
 def calc_time(time: str | None):
